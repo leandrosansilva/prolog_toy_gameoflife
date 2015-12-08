@@ -46,3 +46,16 @@ world_add_cell(world(LiveCells, DeadCells), Cell, world(UnionLiveCells, NewDeadC
   neighbours(Cell, Neighbours),
   union(DeadCells, Neighbours, DeadCellsUnion),
   subtract(DeadCellsUnion, UnionLiveCells, NewDeadCells).
+
+world_add_cells(World, [], World).
+
+world_add_cells(World, [H|T], NewWorld) :-
+  world_add_cell(World, H, IntermediateWorld),
+  world_add_cells(IntermediateWorld, T, NewWorld).
+
+live_neighbours(world(LiveCells, _), Coord, LiveNeighbours) :-
+  neighbours(Coord, Neighbours),
+  intersection(LiveCells, Neighbours, LiveNeighbours).
+
+evolve(_, NextGenWorld) :-
+  empty_world(NextGenWorld).

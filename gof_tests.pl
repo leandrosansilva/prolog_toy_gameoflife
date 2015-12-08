@@ -97,20 +97,48 @@ test(add_cell_to_world) :-
 
 test(add_two_distant_cells) :-
   empty_world(Empty),
-  world_add_cell(Empty, coord(3, 6), WorldAfter1stInsertion),
-  world_add_cell(WorldAfter1stInsertion, coord(7, 10), world(LiveAfter2ndInsertion, DeadAfter2ndInsertion)),
+  world_add_cells(Empty, [coord(3, 6), coord(7, 10)], world(LiveAfter2ndInsertion, DeadAfter2ndInsertion)),
   member(coord(3, 6), LiveAfter2ndInsertion),
   member(coord(7, 10), LiveAfter2ndInsertion),
   length(LiveAfter2ndInsertion, 2),
   length(DeadAfter2ndInsertion, 16).
 
-test(add_two_adjacent_cells) :-
+test(add_multiple_cells) :-
   empty_world(Empty),
-  world_add_cell(Empty, coord(3, 6), WorldAfter1stInsertion),
-  world_add_cell(WorldAfter1stInsertion, coord(4, 7), world(LiveAfter2ndInsertion, DeadAfter2ndInsertion)),
+  world_add_cells(Empty, [coord(4, 7), coord(3, 6)], world(LiveAfter2ndInsertion, DeadAfter2ndInsertion)),
   member(coord(3, 6), LiveAfter2ndInsertion),
   member(coord(4, 7), LiveAfter2ndInsertion),
   length(LiveAfter2ndInsertion, 2),
   length(DeadAfter2ndInsertion, 12).
- 
+
+test(count_two_live_neighbours_of_live_cell) :-
+  empty_world(Empty),
+  world_add_cells(Empty, [coord(4, 7), coord(3, 6), coord(5, 6)], NewWorld),
+  live_neighbours(NewWorld, coord(4, 7), LiveNeighbours),
+  length(LiveNeighbours, 2),
+  member(coord(5, 6), LiveNeighbours),
+  member(coord(3, 6), LiveNeighbours).
+
+test(count_three_live_neighbours_of_dead_cell) :-
+  empty_world(Empty),
+  world_add_cells(Empty, [coord(4, 7), coord(3, 6), coord(5, 6)], NewWorld),
+  live_neighbours(NewWorld, coord(4, 6), LiveNeighbours),
+  length(LiveNeighbours, 3),
+  member(coord(5, 6), LiveNeighbours),
+  member(coord(4, 7), LiveNeighbours),
+  member(coord(3, 6), LiveNeighbours).
+
+test(evolve_single_cell_results_empty_world) :-
+  empty_world(Empty),
+  world_add_cells(Empty, [coord(4, 7)], NewWorld),
+  evolve(NewWorld, EvolvedWorld),
+  empty_world(EvolvedWorld).
+
+test(evolve_tree_inline_will_rotate) :-
+  empty_world(Empty),
+  world_add_cells(Empty, [coord(4, 1), coord(4, 2), coord(4, 3)], NewWorld),
+  evolve(NewWorld, world(LiveCells, DeadCells)),
+  length(LiveCells, 3),
+  length(DeadCells, 12).
+
 :- end_tests(gof_tests).
