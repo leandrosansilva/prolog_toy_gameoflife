@@ -70,15 +70,19 @@ get_cell_state(world(LiveCells, _), Cell, live_cell) :-
 
 get_cell_state(_, _, dead_cell).
 
-evolve_util(_, world([], _), NextGenWorld, NextGenWorld).
 
-evolve_util(InitialWorld, world([Cell|LiveTail], _), PartialNextGenWorld, NextGenWorld) :-
+evolve_util(InitialWorld, world(LiveCells, DeadCells), PartialNextGenWorld, NextGenWorld) :-
+  evolve_util_for_cells_set(live_cell, InitialWorld, LiveCells, PartialNextGenWorld, NextGenWorld).
+
+evolve_util_for_cells_set(_, _, [], NextGenWorld, NextGenWorld).
+
+evolve_util_for_cells_set(ExpectedCellState, InitialWorld, [Cell|LiveTail], PartialNextGenWorld, NextGenWorld) :-
   live_neighbours(InitialWorld, Cell, LiveNeighbours),
   length(LiveNeighbours, NLiveNeighbours),
-  cell_new_state(live_cell, NLiveNeighbours, NewCellState),
+  cell_new_state(ExpectedCellState, NLiveNeighbours, NewCellState),
   try_to_insert_cell_new_world(PartialNextGenWorld, Cell, NewCellState, LessPartialNextGenWorld),
   subtract([Cell|LiveTail], [Cell], LiveRemains), % keeps set structure
-  evolve_util(InitialWorld, world(LiveRemains, _), LessPartialNextGenWorld, NextGenWorld).
+  evolve_util_for_cells_set(ExpectedCellState, InitialWorld, LiveRemains, LessPartialNextGenWorld, NextGenWorld).
 
 evolve(World, NextGenWorld) :-
   empty_world(EmptyWorld),

@@ -148,9 +148,9 @@ test(evolve_single_cell_results_empty_world) :-
 test(evolve_2_square_is_stable) :-
   empty_world(Empty),
   world_add_cells(Empty, [cell(1, 3), cell(2, 3), cell(1, 4), cell(2, 4)], NewWorld),
-  evolve(NewWorld, world(LiveCells, _)),
-  length(LiveCells, 4).
-  %length(DeadCells, 12).
+  evolve(NewWorld, world(LiveCells, DeadCells)),
+  length(LiveCells, 4),
+  length(DeadCells, 12).
 
 % test(evolve_tree_inline_will_rotate) :-
 %   empty_world(Empty),
