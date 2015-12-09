@@ -65,14 +65,9 @@ try_to_insert_cell_new_world(World, _, dead_cell, World).
 try_to_insert_cell_new_world(World, Cell, live_cell, NewWorld) :-
   world_add_cell(World, Cell, NewWorld).
 
-get_cell_state(world(LiveCells, _), Cell, live_cell) :-
-  intersection(LiveCells, [Cell], [Cell]).
-
-get_cell_state(_, _, dead_cell).
-
-
 evolve_util(InitialWorld, world(LiveCells, DeadCells), PartialNextGenWorld, NextGenWorld) :-
-  evolve_util_for_cells_set(live_cell, InitialWorld, LiveCells, PartialNextGenWorld, NextGenWorld).
+  evolve_util_for_cells_set(live_cell, InitialWorld, LiveCells, PartialNextGenWorld, NextGenLiveEvolved),
+  evolve_util_for_cells_set(dead_cell, InitialWorld, DeadCells, NextGenLiveEvolved, NextGenWorld).
 
 evolve_util_for_cells_set(_, _, [], NextGenWorld, NextGenWorld).
 

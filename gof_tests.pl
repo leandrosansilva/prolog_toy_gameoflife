@@ -111,17 +111,6 @@ test(add_multiple_cells) :-
   length(LiveAfter2ndInsertion, 2),
   length(DeadAfter2ndInsertion, 12).
 
-test(check_if_cells_state) :-
-  empty_world(Empty),
-  world_add_cells(Empty,
-    [cell(4, 7), cell(3, 6), cell(0, 1), cell(42, 65)],
-    NewWorld),
-  get_cell_state(NewWorld, cell(4, 7), live_cell),
-  get_cell_state(NewWorld, cell(0, 1), live_cell),
-  get_cell_state(NewWorld, cell(42, 65), live_cell),
-  get_cell_state(NewWorld, cell(0, 0), dead_cell),
-  get_cell_state(NewWorld, cell(123, 456), dead_cell).
-
 test(count_two_live_neighbours_of_live_cell) :-
   empty_world(Empty),
   world_add_cells(Empty, [cell(4, 7), cell(3, 6), cell(5, 6)], NewWorld),
@@ -152,11 +141,11 @@ test(evolve_2_square_is_stable) :-
   length(LiveCells, 4),
   length(DeadCells, 12).
 
-% test(evolve_tree_inline_will_rotate) :-
-%   empty_world(Empty),
-%   world_add_cells(Empty, [cell(4, 1), cell(4, 2), cell(4, 3)], NewWorld),
-%   evolve(NewWorld, world(LiveCells, DeadCells)),
-%   length(LiveCells, 3),
-%   length(DeadCells, 12).
+test(evolve_tree_inline_will_rotate) :-
+  empty_world(Empty),
+  world_add_cells(Empty, [cell(4, 1), cell(4, 2), cell(4, 3)], NewWorld),
+  evolve(NewWorld, world(LiveCells, DeadCells)),
+  length(LiveCells, 3),
+  length(DeadCells, 12).
 
 :- end_tests(gof_tests).
