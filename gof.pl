@@ -53,9 +53,23 @@ world_add_cells(World, [H|T], NewWorld) :-
   world_add_cell(World, H, IntermediateWorld),
   world_add_cells(IntermediateWorld, T, NewWorld).
 
-live_neighbours(world(LiveCells, _), Coord, LiveNeighbours) :-
+live_neighbours_from_live_set(LiveCells, Coord, LiveNeighbours) :-
   neighbours(Coord, Neighbours),
   intersection(LiveCells, Neighbours, LiveNeighbours).
+
+live_neighbours(world(LiveCells, _), Coord, LiveNeighbours) :-
+  live_neighbours_from_live_set(LiveCells, Coord, LiveNeighbours).
+
+try_to_insert_cell_new_world(World, _, dead_cell, World).
+
+try_to_insert_cell_new_world(World, Cell, live_cell, NewWorld) :-
+  world_add_cell(World, Cell, NewWorld).
+  
+%evolve(world([HL|TL], _), NewWorld) :-
+%  live_neighbours_from_live_set([HL|TL], HL, LiveNeighbours),
+%  length(LiveNeighbours, NLiveNeighbours),
+%  cell_new_state(live_cell, NLiveNeighbours, NewCellState),
+%  try_to_insert_cell_new_world(world([HL|TL]), HL, NewCellState, NewWorld).
 
 evolve(_, NextGenWorld) :-
   empty_world(NextGenWorld).
