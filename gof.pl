@@ -83,19 +83,22 @@ evolve(World, NextGenWorld) :-
   empty_world(EmptyWorld),
   evolve_util(World, World, EmptyWorld, NextGenWorld).
 
-cell_to_string(world(LiveCells, _), X, Y, "O") :-
+% 48 is ascii('0')
+cell_to_string(world(LiveCells, _), X, Y, [48]) :-
   intersection([cell(X, Y)], LiveCells, [cell(X, Y)]).
 
 cell_to_string(_, _, _, " ").
 
-world_line_to_string(_, _, _, 0, "\n").
+% 10 is ascii(' ')
+world_line_to_string(_, _, _, 0, Acc, WithBreakLine) :-
+  append(Acc, [10], WithBreakLine).
 
-world_line_to_string(World, X, Y, Width, LineString) :-
-  cell_to_string(World, X, Y, CellString),
+world_line_to_string(World, X, Y, Width, Acc, LineString) :-
   NextX is X + 1,
   RemainWidth is Width - 1,
-  world_line_to_string(World, NextX, Y, RemainWidth, RemainString),
-  append(CellString, RemainString, LineString).
+  cell_to_string(World, X, Y, CellString),
+  append(Acc, CellString, NewAcc),
+  world_line_to_string(World, NextX, Y, RemainWidth, NewAcc, LineString).
 
-world_to_string(World, world_window(X, Y, Width, _), LineString) :-
-  world_line_to_string(World, X, Y, Width, LineString).
+world_to_string(World, world_window(X, Y, _, Width), LineString) :-
+  world_line_to_string(World, X, Y, Width, [], LineString).
