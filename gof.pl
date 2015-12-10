@@ -82,3 +82,20 @@ evolve_util_for_cells_set(ExpectedCellState, InitialWorld, [Cell|LiveTail], Part
 evolve(World, NextGenWorld) :-
   empty_world(EmptyWorld),
   evolve_util(World, World, EmptyWorld, NextGenWorld).
+
+cell_to_string(world(LiveCells, _), X, Y, "O") :-
+  intersection([cell(X, Y)], LiveCells, [cell(X, Y)]).
+
+cell_to_string(_, _, _, " ").
+
+world_line_to_string(_, _, _, 0, "\n").
+
+world_line_to_string(World, X, Y, Width, LineString) :-
+  cell_to_string(World, X, Y, CellString),
+  NextX is X + 1,
+  RemainWidth is Width - 1,
+  world_line_to_string(World, NextX, Y, RemainWidth, RemainString),
+  append(CellString, RemainString, LineString).
+
+world_to_string(World, world_window(X, Y, Width, _), LineString) :-
+  world_line_to_string(World, X, Y, Width, LineString).

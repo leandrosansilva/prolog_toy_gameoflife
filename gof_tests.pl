@@ -148,4 +148,10 @@ test(evolve_tree_inline_will_rotate) :-
   length(LiveCells, 3),
   length(DeadCells, 12).
 
+test(prints_world) :-
+  empty_world(Empty),
+  world_add_cells(Empty, [cell(4, 1), cell(4, 2), cell(4, 3)], NewWorld),
+  world_to_string(NewWorld, world_window(3, 1, 1, 1), " \n"),
+  world_to_string(NewWorld, world_window(3, 1, 1, 2), " 0\n").
+
 :- end_tests(gof_tests).
