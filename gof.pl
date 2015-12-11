@@ -116,3 +116,16 @@ world_to_string(World, Window, WorldString) :-
   world_to_string_codes(World, Window, WorldArray),
   string_to_list(WorldString, WorldArray).
 
+game_of_life_main_loop(World, Window) :-
+  world_to_string(World, Window, WorldString),
+  evolve(World, EvolvedWorld),
+  sleep(1), % sleeps 1s
+  write('\e[H\e[2J'), % clear screen
+  write(WorldString),
+  game_of_life_main_loop(EvolvedWorld, Window).
+  
+game_of_life(Cells, Window) :-
+  empty_world(EmptyWorld),
+  world_add_cells(EmptyWorld, Cells, NewWorld),
+  game_of_life_main_loop(NewWorld, Window).
+  
