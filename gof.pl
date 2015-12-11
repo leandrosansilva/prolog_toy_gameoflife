@@ -101,6 +101,18 @@ world_line_to_string(World, X, Y, Width, Acc, LineString) :-
   append(Acc, CellString, NewAcc),
   world_line_to_string(World, NextX, Y, RemainWidth, NewAcc, LineString).
 
-world_to_string(World, world_window(X, Y, _, Width), LineString) :-
-  world_line_to_string(World, X, Y, Width, [], LineArray),
-  string_to_list(LineString, LineArray).
+world_to_string_codes_util(_, world_window(_, _, 0, _), Acc, Acc).
+
+world_to_string_codes_util(World, world_window(X, Y, Height, Width), Acc, WorldArray) :-
+  world_line_to_string(World, X, Y, Width, Acc, PartialArray),
+  NextLine is Y + 1,
+  RemainHeight is Height - 1,
+  world_to_string_codes_util(World, world_window(X, NextLine, RemainHeight, Width), PartialArray, WorldArray).
+
+world_to_string_codes(World, Window, WorldArray) :-
+  world_to_string_codes_util(World, Window, [], WorldArray).
+
+world_to_string(World, Window, WorldString) :-
+  world_to_string_codes(World, Window, WorldArray),
+  string_to_list(WorldString, WorldArray).
+

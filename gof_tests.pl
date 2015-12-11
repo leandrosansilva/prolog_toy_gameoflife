@@ -151,11 +151,22 @@ test(evolve_tree_inline_will_rotate) :-
 test(prints_world_one_char) :-
   empty_world(Empty),
   world_add_cells(Empty, [cell(4, 1), cell(4, 2), cell(4, 3)], NewWorld),
-  world_to_string(NewWorld, world_window(3, 1, 1, 1), S1), !, S1 = " \n".
+  world_to_string(NewWorld, world_window(3, 1, 1, 1), S), !, S = " \n".
 
 test(prints_world_two_chars) :-
   empty_world(Empty),
   world_add_cells(Empty, [cell(4, 1), cell(4, 2), cell(4, 3)], NewWorld),
-  world_to_string(NewWorld, world_window(3, 1, 1, 2), S2), !, S2 = " 0\n".
+  world_to_string(NewWorld, world_window(3, 1, 1, 2), S), !, S = " 0\n".
+
+test(prints_world_three_chars) :-
+  empty_world(Empty),
+  world_add_cells(Empty, [cell(4, 1), cell(4, 2), cell(4, 3)], NewWorld),
+  evolve(NewWorld, EvolveWorld),
+  world_to_string(EvolveWorld, world_window(3, 2, 1, 3), S), !, S = "000\n".
+
+test(prints_9x9_window) :-
+  empty_world(Empty),
+  world_add_cells(Empty, [cell(4, 1), cell(4, 2), cell(4, 3)], NewWorld),
+  world_to_string(NewWorld, world_window(3, 1, 3, 3), S), !, S = " 0 \n 0 \n 0 \n".
 
 :- end_tests(gof_tests).
