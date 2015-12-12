@@ -1,6 +1,6 @@
 # Conway's Game of Life in Prolog
 
-So... I a finally studying Prolog.
+So... I am finally studying Prolog.
 
 As I got really interested in the Conway's Game of Life, so decided to use it
 as exercise on learning new programming languages and refreshing the ones I know.
